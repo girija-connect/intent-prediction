@@ -12,13 +12,14 @@ def generate_launch_description():
     models = os.path.join(get_package_share_directory('description'), 'models')
     tb3_models = os.path.join(get_package_share_directory('turtlebot3_gazebo'), 'models')
 
+    # URDF for RViz's RobotModel display + the robot's TF tree (base_footprint -> base_link -> sensors/wheels)
+    urdf = os.path.join(get_package_share_directory('turtlebot3_description'), 'urdf', 'turtlebot3_waffle.urdf')
+    with open(urdf) as f:
+        # the stock URDF has literal ${namespace} placeholders in every frame name; we run un-namespaced
+        robot_desc = f.read().replace('${namespace}', '')
+
     def with_models(var):
         return os.pathsep.join([p for p in (models, tb3_models, os.environ.get(var, '')) if p])
-
-    def static_tf(x, y, z, parent, child):
-        return Node(package='tf2_ros', executable='static_transform_publisher',
-                    arguments=['--x', str(x), '--y', str(y), '--z', str(z),
-                               '--frame-id', parent, '--child-frame-id', child])
 
     bridge_args = [
         '/clock@rosgraph_msgs/msg/Clock[ignition.msgs.Clock',
@@ -41,8 +42,11 @@ def generate_launch_description():
                                           os.path.join(pkg, 'worlds', 'office.sdf')]}.items()),
         Node(package='ros_gz_bridge', executable='parameter_bridge',
              arguments=bridge_args, output='screen'),
-        # robot TF tree: odom -> base_footprint comes from Gazebo's diff-drive plugin
-        static_tf(0.0, 0.0, 0.010, 'base_footprint', 'base_link'),
-        static_tf(-0.064, 0.0, 0.111, 'base_link', 'base_scan'),
-        static_tf(0.064, -0.065, 0.094, 'base_link', 'camera_link'),
+        # robot TF tree: odom -> base_footprint comes from Gazebo's diff-drive plugin;
+        # the rest (base_link, base_scan, camera_link, wheels...) comes from the URDF below
+        Node(package='robot_state_publisher', executable='robot_state_publisher', output='screen',
+             parameters=[{'robot_description': robot_desc, 'use_sim_time': True}]),
+        # wheel joints have no joint_states in this sim; publish zeros so their TF frames exist
+        Node(package='joint_state_publisher', executable='joint_state_publisher',
+             parameters=[{'use_sim_time': True}]),
     ])
