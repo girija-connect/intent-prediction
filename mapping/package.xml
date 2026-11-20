@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<package format="3">
+  <name>mapping</name>
+  <version>0.1.0</version>
+  <description>Static occupancy map of the office world (+ script that regenerates it from the SDF)</description>
+  <maintainer email="girija.connect13@gmail.com">Girija</maintainer>
+  <license>MIT</license>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+
+  <exec_depend>python3-numpy</exec_depend>
+  <exec_depend>python3-pil</exec_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>
