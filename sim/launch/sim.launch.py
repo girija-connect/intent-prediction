@@ -15,7 +15,6 @@ def generate_launch_description():
     # URDF for RViz's RobotModel display + the robot's TF tree (base_footprint -> base_link -> sensors/wheels)
     urdf = os.path.join(get_package_share_directory('turtlebot3_description'), 'urdf', 'turtlebot3_waffle.urdf')
     with open(urdf) as f:
-        # the stock URDF has literal ${namespace} placeholders in every frame name; we run un-namespaced
         robot_desc = f.read().replace('${namespace}', '')
 
     def with_models(var):
@@ -42,11 +41,8 @@ def generate_launch_description():
                                           os.path.join(pkg, 'worlds', 'office.sdf')]}.items()),
         Node(package='ros_gz_bridge', executable='parameter_bridge',
              arguments=bridge_args, output='screen'),
-        # robot TF tree: odom -> base_footprint comes from Gazebo's diff-drive plugin;
-        # the rest (base_link, base_scan, camera_link, wheels...) comes from the URDF below
         Node(package='robot_state_publisher', executable='robot_state_publisher', output='screen',
              parameters=[{'robot_description': robot_desc, 'use_sim_time': True}]),
-        # wheel joints have no joint_states in this sim; publish zeros so their TF frames exist
         Node(package='joint_state_publisher', executable='joint_state_publisher',
              parameters=[{'use_sim_time': True}]),
     ])
