@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<package format="3">
+  <name>navigation</name>
+  <version>0.1.0</version>
+  <description>Navigation layer: localization + Nav2 (costmaps incl. human layer) + safety + perception + prediction</description>
+  <maintainer email="girija.connect13@gmail.com">Girija</maintainer>
+  <license>MIT</license>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+
+  <exec_depend>nav2_bringup</exec_depend>
+  <exec_depend>localization</exec_depend>
+  <exec_depend>mapping</exec_depend>
+  <exec_depend>perception</exec_depend>
+  <exec_depend>prediction</exec_depend>
+  <exec_depend>safety</exec_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>
