@@ -35,16 +35,34 @@
         <geometry><mesh><uri>model://turtlebot3_common/meshes/sensors/lds.stl</uri><scale>0.001 0.001 0.001</scale></mesh></geometry>
         <material><ambient>0.2 0.2 0.2 1</ambient><diffuse>0.2 0.2 0.2 1</diffuse></material>
       </visual>
+      <!-- Camera mount: the lens is at (-0.064, 0, 0.210) in base_link = 0.22 m above the floor -->
+      <visual name="camera_mount_plate_visual">
+        <pose>-0.0845 0 0.132 0 0 0</pose>
+        <geometry><cylinder><radius>0.014</radius><length>0.004</length></cylinder></geometry>
+        <material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material>
+      </visual>
+      <visual name="camera_post_visual">
+        <pose>-0.0845 0 0.165 0 0 0</pose>
+        <geometry><cylinder><radius>0.006</radius><length>0.066</length></cylinder></geometry>
+        <material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.15 0.15 0.15 1</diffuse></material>
+      </visual>
+      <!-- camera body: 15 mm deep, 90 mm wide, 25 mm tall; front face at x=-0.072 -->
       <visual name="camera_visual">
-        <pose>0.064 -0.065 0.094 0 0 0</pose>
-        <geometry><box><size>0.015 0.090 0.027</size></box></geometry>
-        <material><ambient>0.1 0.1 0.1 1</ambient><diffuse>0.1 0.1 0.1 1</diffuse></material>
+        <pose>-0.0795 0 0.210 0 0 0</pose>
+        <geometry><box><size>0.015 0.090 0.025</size></box></geometry>
+        <material><ambient>0.3 0.3 0.3 1</ambient><diffuse>0.3 0.3 0.3 1</diffuse>
+          <specular>0.4 0.4 0.4 1</specular></material>
+      </visual>
+      <!-- lens barrel (axis along x), front face at x=-0.068 -->
+      <visual name="camera_lens_barrel_visual">
+        <pose>-0.0700 0 0.210 0 1.5708 0</pose>
+        <geometry><cylinder><radius>0.010</radius><length>0.004</length></cylinder></geometry>
+        <material><ambient>0.3 0.3 0.3 1</ambient><diffuse>0.3 0.3 0.3 1</diffuse></material>
       </visual>
 
-      <!-- Camera (waffle): 0.104 m above the floor, 0.064 m ahead and 0.065 m right of the robot centre.
-           960x540 instead of 1920x1080 to keep detection fast; same 62 deg horizontal FOV. -->
+      <!-- Camera: 960x540: 62 deg horizontal FOV. -->
       <sensor name="camera" type="camera">
-        <pose>0.064 -0.065 0.094 0 0 0</pose>
+        <pose>-0.064 0 0.210 0 0 0</pose>
         <always_on>1</always_on>
         <update_rate>15</update_rate>
         <topic>camera/image_raw</topic>
@@ -55,7 +73,7 @@
         </camera>
       </sensor>
 
-      <!-- LDS-01 style 2D lidar on /scan (not used by the tracker yet; handy for fusion later) -->
+      <!-- LDS-01 style 2D lidar on /scan  -->
       <sensor name="lidar" type="gpu_lidar">
         <pose>-0.064 0 0.111 0 0 0</pose>
         <always_on>1</always_on>
