@@ -143,6 +143,7 @@ local_costmap:
         scan:
           topic: /scan
           data_type: "LaserScan"
+          inf_is_valid: True               # no-return beams (>8 m) must still clear old cells
           marking: True
           clearing: True
           max_obstacle_height: 2.0
@@ -176,6 +177,7 @@ global_costmap:
         scan:
           topic: /scan
           data_type: "LaserScan"
+          inf_is_valid: True               # no-return beams (>8 m) must still clear old cells
           marking: True
           clearing: True
           max_obstacle_height: 2.0
